@@ -90,11 +90,11 @@ justification=raggedright,singlelinecheck=off]{caption}
 Cancer stem cells (CSCs) are particularly successful at fending off the effects of radiotherapy. Here we extend a computational model of tumorsphere growth, which allows us to track the location of the CSCs at all times, to show that their resistance at least partially stems from their preferential location near the spheroid center. Since radioresistance increases as oxygen availability decreases, and CSCs are found to be located predominantly away from the tumorsphere surface, these cells are especially well protected against radiation. Although this effect is minimal in early-stage tumorspheres, it becomes increasingly important as they grow. To further validate our hypothesis, we compare our results with those obtained by applying radiation to ersatz tumorspheres where the CSCs have been randomly redistributed, showing that this altered disposition substantially reduces their survival chances. These results are unchanged in the presence of necrosis.
 
 \section*{Author summary}
-Cancer stem cells are often reported to survive radiotherapy better than non-stem cancer cells, a finding commonly attributed to intrinsic differences such as enhanced DNA repair or altered redox balance. However, tumors are spatially structured and contain strong oxygen gradients, which can also shape treatment response.
+Radiotherapy is widely used to treat cancer, yet tumors often recover after treatment. Many studies link this failure to cancer stem cells, a small subpopulation thought to seed regrowth. These cells are typically assumed to survive because they are intrinsically more resistant. But tumors are spatially organized, and where a cell sits can change how much radiation damage it experiences.
 
-Here we use a three-dimensional computational tumorsphere model to test whether spatial organization alone can generate an apparent survival advantage. The model predicts that cancer stem cells become preferentially located toward the tumorsphere interior, where oxygen levels are lower. When we simulate a uniform radiation dose and assume identical intrinsic radiosensitivity for both phenotypes, interior cells are less likely to be killed because hypoxia reduces radiation effectiveness. As a result, cancer stem cells are enriched among survivors even without any built-in radioresistance. This enrichment vanishes when stemness labels are randomized and persists when a necrotic core is included.
+We built a three-dimensional computer model of tumorspheres (spherical tumor-like cell clusters) that tracks each cell’s position during growth. Starting from a single stem cell, the model predicts that stem cells become concentrated toward the spheroid interior. The interior is less oxygenated, and low oxygen levels are known to reduce the effectiveness of radiotherapy. When we apply a uniform radiation dose in the model, inner cells are therefore more likely to survive, producing an apparent enrichment of stem cells even when stem and non-stem cells are assigned the same intrinsic sensitivity to radiation.
 
-These results show that spatial localization and microenvironmental oxygenation can be sufficient to explain cancer stem cell enrichment after radiotherapy, emphasizing the need to account for tumor architecture when interpreting treatment outcomes.
+To test that this effect is truly spatial, we repeated the treatment after randomly redistributing stem cells within the same spheroids and found markedly lower stem-cell survival. The same conclusion holds when a necrotic core is present. Our results suggest that spatial organization should be considered when interpreting resistance to radiotherapy.
 
 \linenumbers
 
@@ -123,19 +123,12 @@ Our working hypothesis is that an important reason for the observed survival of 
 We use a tailored Python 3 object-oriented code, built as a package (see \href{https://github.com/JeroFotinos/tumorsphere_culture}{\lstinline|tumorsphere_culture|}), with cells in two \emph{phenotypes}: CSCs and DCCs. Each cell can be either in a \emph{proliferative} or a \emph{quiescent} state during growth, and change to a \emph{killed} state after radiotherapy. We start the simulation with one active CSC and ask it to duplicate. Later, at each time step, we ask all proliferative cells to divide, provided there is enough room for the new cell. Cells that fail to proliferate on account of the lack of space change to the quiescent state. If there is enough room and the replicating cell is a CSC, it either self-renews with a probability $p_s$ or generates one CSC and one DCC with a probability $1-p_s$. If the parent and daughter cells belong to different phenotypes (one CSC and one DCC), we exchange the positions of the original CSC and the new DCC with a probability $1/2$. Naturally, an active DCC can only create another active DCC, so in this case, the switching would be inconsequential. We remark that the model is lattice-free. Although the model is lattice-free, for computational efficiency we used a custom discretization inspired by the Moore neighborhood, designed to preserve the generality of the approach. Updates are made in random order; once all the proliferative cells are requested to duplicate, independently of the success of their attempts, we say that a one-day-long time step has been performed. This implies, without any loss of generality, that the PDT is one day, corresponding to a reasonable growth rate that also aids intuition. Further details on the structure of the simulation process are reported in \cite{barberisRadialPercolationReveals2021}. We note that, by neglecting the probability of symmetric differentiation, we are considering the most favorable case for CSC expansion. If symmetric differentiation were allowed, fewer CSCs would be found near the tumorsphere's surface, further reinforcing our results.
 
 \subsection*{Package Architecture}
-We have a class for cells, a class for cultures, and a class for simulations. \lstinline|Simulation| objects coordinate the evolution of \lstinline|Culture|'s. In turn, \lstinline|Culture|'s are collections of \lstinline|Cell|'s. In both cases there is an aggregation relationship. However, while \lstinline|Culture|'s can be instantiated by \lstinline|Simulation|'s or on its own, \lstinline|Cell|'s are components that can only exist as part of their container (\lstinline|Culture|'s). The simplest simulation one can make, requires a \lstinline|Culture| with its \lstinline|cells|, \lstinline|grid|, and \lstinline|output|. Optionally, one can orchestrate many realizations at a time with a \lstinline|Simulation| object, say for a parameter sweep. Therefore, there is a composition relation between \lstinline|Cell|'s and \lstinline|Culture|'s, and only an aggregation relationship between \lstinline|Culture|'s and \lstinline|Simulation|'s. This is illustrated in Fig. \ref{fig: uml_classes}. It is worth mentioning that the \lstinline|Cell| class is actually a data class, due to memory efficiency considerations. That is why there are no methods in this class, and all cell behavior is managed by the \lstinline|Culture| class.
+We have a class for cells, a class for cultures, and a class for simulations. \lstinline|Simulation| objects coordinate the evolution of \lstinline|Culture|'s. In turn, \lstinline|Culture|'s are collections of \lstinline|Cell|'s. In both cases there is an aggregation relationship. However, while \lstinline|Culture|'s can be instantiated by \lstinline|Simulation|'s or on its own, \lstinline|Cell|'s are components that can only exist as part of their container (\lstinline|Culture|'s). The simplest simulation one can make, requires a \lstinline|Culture| with its \lstinline|cells|, \lstinline|grid|, and \lstinline|output|. Optionally, one can orchestrate many realizations at a time with a \lstinline|Simulation| object, say for a parameter sweep. Therefore, there is a composition relation between \lstinline|Cell|'s and \lstinline|Culture|'s, and only an aggregation relationship between \lstinline|Culture|'s and \lstinline|Simulation|'s. This is illustrated in a UML diagram provided in the supporting information; see Fig. \ref{fig: uml_classes}. It is worth mentioning that the \lstinline|Cell| class is actually a data class, due to memory efficiency considerations. That is why there are no methods in this class, and all cell behavior is managed by the \lstinline|Culture| class.
 
 \lstinline|DatOutput|, \lstinline|OutputDemux|, \lstinline|OvitoOutput|, and \lstinline|SQLOutput| implement the interface given by the abstract class \lstinline|TumorsphereOutput| via inheritance. They are in charge of storing the simulation results in different ways, changing the output's format and the amount of detail included in the output. Broadly speaking, \lstinline|DatOutput| is the least detailed result one can get from simulations, providing only the number of cells of each kind as a function of time. At the other end of the specturm, \lstinline|SQLOutput| is the most complete output and registers everything that happens in a simulation into an SQL database, from the parent of each cell, to the time at which a particular cell deactivated. \lstinline|OvitoOutput| is used to produce data in the appropriate format for rendering the culture's evolution. \lstinline|OutputDemux| allows combining many different output types, delegating each task to its list of requested output objects. In that way, a \lstinline|Culture| object can use both \lstinline|DatOutput| and \lstinline|OvitoOutput| at the same time. \lstinline|TumorsphereOutput| objects always exist as components of a \lstinline|Culture| object, so we have again a composition relationship.
 
 The \lstinline|SpatialHashGrid| class manages the grid-based spatial hash. The basic idea is to divide the 3D space into cubes of a given size, and see in which of them a given cell lies. Then, when looking for overlaps between cells, we only have to check the distances with the cells in the same cube of the original cell, or the neighboring cubes. This greatly enhances performance and allows simulating cultures with a high number of cells. \lstinline|SpatialHashGrid| objects always exist as components of a \lstinline|Culture|, their aggregation relationship following from that. There's also a dependency between \lstinline|Simulation| and \lstinline|SpatialHashGrid| due to direct mention of the latter's name in the former.
 
-
-\begin{figure}
-	\centering
-	% \includegraphics[width=1.0\textwidth]{./images/classes.pdf}
-	\caption{\emph{UML diagram for the package's classes.} \lstinline|Simulation| objects are aggregates of \lstinline|Culture| objects, and \lstinline|Culture| objects are composed by \lstinline|Cell| objects. \lstinline|DatOutput|, \lstinline|OutputDemux|, \lstinline|OvitoOutput|, and \lstinline|SQLOutput| implement the \lstinline|TumorsphereOutput| interface. \lstinline|TumorsphereOutput| and \lstinline|SpatialHashGrid| objects always exist as components of a \lstinline|Culture| object, so we have again a composition relationship between them and the \lstinline|Culture| class. The \lstinline|Simulation| class depends on the \lstinline|SpatialHashGrid| class, since the latter is instantiated by the former when creating \lstinline|Culture|'s. }
-	\label{fig: uml_classes}
-\end{figure}
 
 \subsection*{Implementation of Therapy}
 
@@ -190,7 +183,7 @@ Typical outcomes of the growth process in the absence of a necrotic core are sho
 % ==== FIG 1 ====
 \begin{figure}
 	\centering
-	% \includegraphics[width=\textwidth]{./images/F1.eps}
+	\includegraphics[width=\textwidth]{./images/F1.eps}
 	\caption{(a) Sagittal cut of a tumorsphere for moderate self-renewal probability ($p_s=0.4$). CSCs are quiescent and confined to the core.  (b) Sagittal cut for high self-renewal probability ($p_s=0.7$). CSCs have a chance to reach the border and keep proliferating. (c) External view of the tumorsphere for large self-renewal, showing  proliferating CSCs (in red) at the surface. (d) Time evolution of CSC populations. For $p_s=0.4$ (blue) the growth of CSCs is arrested at an early stage. For $p_s=0.7$ the population of CSCs keeps increasing but its growth rate decreases over time.  (e) Oxygen profile as a function of the distance $r$ from the center for 10-day (blue) and 30-day (orange) tumorspheres.   (f) Total cell distribution inside a 30-day tumorsphere ($\rho$ is the number of cells in each shell).  \label{f:methods}} 	
 \end{figure}
 
@@ -248,7 +241,7 @@ In Fig. \ref{f:dosis_const}, we show histograms for 10-day-old tumorspheres, whe
 % ==== FIG 2 ====
 \begin{figure}
 	\centering
-	% \includegraphics[width=\textwidth]{./images/F2.eps}
+	\includegraphics[width=\textwidth]{./images/F2.eps}
 	\caption{\emph{Normalized cell distributions for 10-day-old tumorspheres.} (a) Before therapy, CSCs (red) and DCCs (blue) exhibit similar spatial distributions, although the DCCs are slightly displaced outward from the center. (b) Following therapy, few cells of either phenotype remain, a consequence of the high oxygenation of the entire tumorsphere.  The spatial distribution of killed cells closely resembles that observed prior to treatment.}
 	\label{f:dosis_const}
 \end{figure}
@@ -267,7 +260,7 @@ Figure \ref{f:30} shows histograms for 30-day-old tumorspheres immediately after
 % ==== FIG 3 ====
 \begin{figure}
 	\centering
-	% \includegraphics[width=\textwidth]{./images/F3.eps}
+	\includegraphics[width=\textwidth]{./images/F3.eps}
 	\caption{\emph{Cell distributions for 30-day-old tumorspheres after therapy.}  (a) Killed and surviving CSC and DCC histograms. For both phenotypes, cells were preferentially killed closer to the surface. (b) Expanded view of the distributions of surviving and killed CSCs. (c) Cell density shows CSCs are mainly located far from the surface. (d) Cell fractions reveal that cells are protected in the core of the tumorsphere.}
 	\label{f:30}
 \end{figure}
@@ -284,7 +277,7 @@ To reinforce our conclusions on the impact of the non-uniformity of the CSC dist
 % ==== FIG 4 ====
 \begin{figure}
 	\centering
-	% \includegraphics[width=\textwidth]{./images/F4.eps}
+	\includegraphics[width=\textwidth]{./images/F4.eps}
 	\caption{\emph{Effect of radiotherapy on a 30-day-old tumorsphere with a random CSC distribution.} Histograms show cell numbers as a function of distance from the tumorsphere center. (a) CSC and DCC spatial distributions display the same overall shape, although their total numbers differ greatly. (b) Comparison between the CSC distributions in our model and those resulting from a random cell allocation. The number of surviving CSCs is higher in our model.}
 	\label{fig:random}
 \end{figure}
@@ -313,7 +306,7 @@ Finally, we compare our results with those obtained under the assumption that CS
 % ==== FIG 5 ====
 \begin{figure}
 	\centering
-	% \includegraphics[width=\textwidth]{./images/F5.eps}
+	\includegraphics[width=\textwidth]{./images/F5.eps}
 	\caption{\emph{Combined effects of hypoxia and radiation on 30-day tumorspheres.} (a) Cell distribution before the therapy. The spheroid has developed a necrotic core of radius $ R_N = 150 \ mu$m. The inset highlights the hypoxic CSC range. (b) Cell distribution after a single dose of radiotherapy; the fraction of killed DCCs in the necrotic core is greater than that of killed CSCs. (c) Histograms from (b) rescaled to show the radial dependence of the cell concentration. (d) Concentration fractions of all cell types. Here $c_S=0.23$ and $c_D=0.30$.}
 	\label{fig:necrotic}
 \end{figure}
@@ -421,23 +414,30 @@ The histograms in Fig. \ref{fig:S2} clearly illustrate the advantages conferred 
 \subsection*{Supplementary Figures}
 \addcontentsline{toc}{section}{Supplementary Figures}
 
+\begin{figure}
+	\centering
+	\includegraphics[width=1.0\textwidth]{./images/classes.pdf}
+	\caption{\emph{UML diagram for the package's classes.} \lstinline|Simulation| objects are aggregates of \lstinline|Culture| objects, and \lstinline|Culture| objects are composed by \lstinline|Cell| objects. \lstinline|DatOutput|, \lstinline|OutputDemux|, \lstinline|OvitoOutput|, and \lstinline|SQLOutput| implement the \lstinline|TumorsphereOutput| interface. \lstinline|TumorsphereOutput| and \lstinline|SpatialHashGrid| objects always exist as components of a \lstinline|Culture| object, so we have again a composition relationship between them and the \lstinline|Culture| class. The \lstinline|Simulation| class depends on the \lstinline|SpatialHashGrid| class, since the latter is instantiated by the former when creating \lstinline|Culture|'s. }
+	\label{fig: uml_classes}
+\end{figure}
+
 \begin{figure}[ht]
 	\centering
-	% \includegraphics[width=1.0\linewidth]{./images/S1.eps}
+	\includegraphics[width=1.0\linewidth]{./images/S1.eps}
 	\caption{\emph{Cell distributions for 60-day-old tumorspheres after therapy.}  (a) Killed and surviving CSC and DCC distributions display the same shape as those for 30-day old tumorspheres. The CSC population is too small to be clearly visible and is rescaled in the next panel. (b) Expanded view of the surviving and killed CSC distributions. (c) Radial dependence of the cell density shows CSCs are mainly located far from the surface. (d) Cell fraction profiles reveal that cells would be protected within the core of the tumorsphere.  No killed CSCs are detectable at this scale.}
 	\label{fig:S1}
 \end{figure}
 
 \begin{figure}[ht]
 	\centering
-	% \includegraphics[width=1.0\linewidth]{./images/S2.eps}
+	\includegraphics[width=1.0\linewidth]{./images/S2.eps}
 	\caption{\emph{Effect of radiotherapy on a 60-day-old tumorsphere with a random CSC distribution.} Histograms show cell numbers as a function of distance from the tumorsphere center. (a) CSC and DCC spatial distributions display the same overall shape, although their total numbers differ greatly. [En esta escala las CSC no se ven; se podrian poner en la misma grafica los numeros de CSC multiplicados por 10, por ejemplo] (b) Comparison between the CSC distributions in our model (cf. Fig S1b) with those resulting from a random cell allocation shows that the CSC survival is higher in our model.}
 	\label{fig:S2}
 \end{figure}
 
 \begin{figure}[ht]
 	\centering
-	% \includegraphics[width=1.0\linewidth]{./images/S3.eps}
+	\includegraphics[width=1.0\linewidth]{./images/S3.eps}
 	\caption{\emph{Combined effects of hypoxia and radiation on 60-day tumorspheres} reveals a complete absence oflive CSCs for $c_S=0.23$ and $c_D=0.30$. This is a consequence of our assumption that CSC cannot survive at very low $O_2$ concentrations. (a) Before the therapy, the tumorsphere has developed a necrotic core of radius $ R_N = 590 \mu m$. The inset highlights the hypoxic CSC range showing a very small fraction of live CSCs located far from the center due to the stringent threshold.  (b) Cell distribution after a single dose of radiotherapy; for clarity, cells that were already dead at the time of the therapy are not shown. All surviving CSCs were killed by therapy. (c) Histograms from (b) rescaled to show the radial dependence of the cell concentrations. (d) Cell fraction profiles for all cell types highlighting the CSC annihilation resulting from  the strict anoxic threshold $c_S$.}
 	\label{fig:S3}
 \end{figure}
