@@ -183,7 +183,7 @@ Typical outcomes of the growth process in the absence of a necrotic core are sho
 % ==== FIG 1 ====
 \begin{figure}
 	\centering
-	\includegraphics[width=\textwidth]{./images/F1.eps}
+	% \includegraphics[width=\textwidth]{./images/F1.eps}
 	\caption{(a) Sagittal cut of a tumorsphere for moderate self-renewal probability ($p_s=0.4$). CSCs are quiescent and confined to the core.  (b) Sagittal cut for high self-renewal probability ($p_s=0.7$). CSCs have a chance to reach the border and keep proliferating. (c) External view of the tumorsphere for large self-renewal, showing  proliferating CSCs (in red) at the surface. (d) Time evolution of CSC populations. For $p_s=0.4$ (blue) the growth of CSCs is arrested at an early stage. For $p_s=0.7$ the population of CSCs keeps increasing but its growth rate decreases over time.  (e) Oxygen profile as a function of the distance $r$ from the center for 10-day (blue) and 30-day (orange) tumorspheres.   (f) Total cell distribution inside a 30-day tumorsphere ($\rho$ is the number of cells in each shell).  \label{f:methods}} 	
 \end{figure}
 
@@ -241,7 +241,7 @@ In Fig. \ref{f:dosis_const}, we show histograms for 10-day-old tumorspheres, whe
 % ==== FIG 2 ====
 \begin{figure}
 	\centering
-	\includegraphics[width=\textwidth]{./images/F2.eps}
+	% \includegraphics[width=\textwidth]{./images/F2.eps}
 	\caption{\emph{Normalized cell distributions for 10-day-old tumorspheres.} (a) Before therapy, CSCs (red) and DCCs (blue) exhibit similar spatial distributions, although the DCCs are slightly displaced outward from the center. (b) Following therapy, few cells of either phenotype remain, a consequence of the high oxygenation of the entire tumorsphere.  The spatial distribution of killed cells closely resembles that observed prior to treatment.}
 	\label{f:dosis_const}
 \end{figure}
@@ -260,7 +260,7 @@ Figure \ref{f:30} shows histograms for 30-day-old tumorspheres immediately after
 % ==== FIG 3 ====
 \begin{figure}
 	\centering
-	\includegraphics[width=\textwidth]{./images/F3.eps}
+	% \includegraphics[width=\textwidth]{./images/F3.eps}
 	\caption{\emph{Cell distributions for 30-day-old tumorspheres after therapy.}  (a) Killed and surviving CSC and DCC histograms. For both phenotypes, cells were preferentially killed closer to the surface. (b) Expanded view of the distributions of surviving and killed CSCs. (c) Cell density shows CSCs are mainly located far from the surface. (d) Cell fractions reveal that cells are protected in the core of the tumorsphere.}
 	\label{f:30}
 \end{figure}
@@ -277,7 +277,7 @@ To reinforce our conclusions on the impact of the non-uniformity of the CSC dist
 % ==== FIG 4 ====
 \begin{figure}
 	\centering
-	\includegraphics[width=\textwidth]{./images/F4.eps}
+	% \includegraphics[width=\textwidth]{./images/F4.eps}
 	\caption{\emph{Effect of radiotherapy on a 30-day-old tumorsphere with a random CSC distribution.} Histograms show cell numbers as a function of distance from the tumorsphere center. (a) CSC and DCC spatial distributions display the same overall shape, although their total numbers differ greatly. (b) Comparison between the CSC distributions in our model and those resulting from a random cell allocation. The number of surviving CSCs is higher in our model.}
 	\label{fig:random}
 \end{figure}
@@ -306,7 +306,7 @@ Finally, we compare our results with those obtained under the assumption that CS
 % ==== FIG 5 ====
 \begin{figure}
 	\centering
-	\includegraphics[width=\textwidth]{./images/F5.eps}
+	% \includegraphics[width=\textwidth]{./images/F5.eps}
 	\caption{\emph{Combined effects of hypoxia and radiation on 30-day tumorspheres.} (a) Cell distribution before the therapy. The spheroid has developed a necrotic core of radius $ R_N = 150 \ mu$m. The inset highlights the hypoxic CSC range. (b) Cell distribution after a single dose of radiotherapy; the fraction of killed DCCs in the necrotic core is greater than that of killed CSCs. (c) Histograms from (b) rescaled to show the radial dependence of the cell concentration. (d) Concentration fractions of all cell types. Here $c_S=0.23$ and $c_D=0.30$.}
 	\label{fig:necrotic}
 \end{figure}
@@ -416,28 +416,28 @@ The histograms in Fig. \ref{fig:S2} clearly illustrate the advantages conferred 
 
 \begin{figure}
 	\centering
-	\includegraphics[width=1.0\textwidth]{./images/classes.pdf}
+	% \includegraphics[width=1.0\textwidth]{./images/classes.pdf}
 	\caption{\emph{UML diagram for the package's classes.} \lstinline|Simulation| objects are aggregates of \lstinline|Culture| objects, and \lstinline|Culture| objects are composed by \lstinline|Cell| objects. \lstinline|DatOutput|, \lstinline|OutputDemux|, \lstinline|OvitoOutput|, and \lstinline|SQLOutput| implement the \lstinline|TumorsphereOutput| interface. \lstinline|TumorsphereOutput| and \lstinline|SpatialHashGrid| objects always exist as components of a \lstinline|Culture| object, so we have again a composition relationship between them and the \lstinline|Culture| class. The \lstinline|Simulation| class depends on the \lstinline|SpatialHashGrid| class, since the latter is instantiated by the former when creating \lstinline|Culture|'s. }
 	\label{fig: uml_classes}
 \end{figure}
 
 \begin{figure}[ht]
 	\centering
-	\includegraphics[width=1.0\linewidth]{./images/S1.eps}
+	% \includegraphics[width=1.0\linewidth]{./images/S1.eps}
 	\caption{\emph{Cell distributions for 60-day-old tumorspheres after therapy.}  (a) Killed and surviving CSC and DCC distributions display the same shape as those for 30-day old tumorspheres. The CSC population is too small to be clearly visible and is rescaled in the next panel. (b) Expanded view of the surviving and killed CSC distributions. (c) Radial dependence of the cell density shows CSCs are mainly located far from the surface. (d) Cell fraction profiles reveal that cells would be protected within the core of the tumorsphere.  No killed CSCs are detectable at this scale.}
 	\label{fig:S1}
 \end{figure}
 
 \begin{figure}[ht]
 	\centering
-	\includegraphics[width=1.0\linewidth]{./images/S2.eps}
+	% \includegraphics[width=1.0\linewidth]{./images/S2.eps}
 	\caption{\emph{Effect of radiotherapy on a 60-day-old tumorsphere with a random CSC distribution.} Histograms show cell numbers as a function of distance from the tumorsphere center. (a) CSC and DCC spatial distributions display the same overall shape, although their total numbers differ greatly. [En esta escala las CSC no se ven; se podrian poner en la misma grafica los numeros de CSC multiplicados por 10, por ejemplo] (b) Comparison between the CSC distributions in our model (cf. Fig S1b) with those resulting from a random cell allocation shows that the CSC survival is higher in our model.}
 	\label{fig:S2}
 \end{figure}
 
 \begin{figure}[ht]
 	\centering
-	\includegraphics[width=1.0\linewidth]{./images/S3.eps}
+	% \includegraphics[width=1.0\linewidth]{./images/S3.eps}
 	\caption{\emph{Combined effects of hypoxia and radiation on 60-day tumorspheres} reveals a complete absence oflive CSCs for $c_S=0.23$ and $c_D=0.30$. This is a consequence of our assumption that CSC cannot survive at very low $O_2$ concentrations. (a) Before the therapy, the tumorsphere has developed a necrotic core of radius $ R_N = 590 \mu m$. The inset highlights the hypoxic CSC range showing a very small fraction of live CSCs located far from the center due to the stringent threshold.  (b) Cell distribution after a single dose of radiotherapy; for clarity, cells that were already dead at the time of the therapy are not shown. All surviving CSCs were killed by therapy. (c) Histograms from (b) rescaled to show the radial dependence of the cell concentrations. (d) Cell fraction profiles for all cell types highlighting the CSC annihilation resulting from  the strict anoxic threshold $c_S$.}
 	\label{fig:S3}
 \end{figure}
